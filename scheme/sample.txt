@@ -1,0 +1,17 @@
+(define (pushstack card st)
+   (cons (car st) (cons card (cdr st)))
+)
+
+(define (play currentcard rank hand ctr )
+                           ; the heart of the program.  The 'hand' hold
+                           ; the current card distribution as stacks
+                           ; 'currentcard' is the current card we are operating
+                           ; on - we always start with King's pile
+   (let  ((newhand (removecard rank hand)))
+       (let ((card (topcard (car currentcard) newhand)) )
+         (cond ((null? card) (cons currentcard (list ctr)))
+               (else (play card (car currentcard) newhand (+ ctr 1)))
+         )
+       )
+   )
+)'
