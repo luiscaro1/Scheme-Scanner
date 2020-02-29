@@ -1,8 +1,11 @@
+
+;;adds a pair of brackets instead of parenthesis
+
 ;; Calculation of Hofstadter's male and female sequences as a list of pairs
 
 (define (hofstadter-male-female n)
-  (letrec ((female (lambda (n)
-		     (if (= n 0)
+  (letrec ({female (lambda (n)
+		     (if (= n 0}
 			 1
 			 (- n (male (female (- n 1)))))))
 	   (male (lambda (n)

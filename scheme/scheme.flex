@@ -13,7 +13,7 @@ Whitespace={LineTerminator}|[\s\t\f]
 
 Comment=;.*(.*)?(.*)
 
-Identifier={Initial}{Subsequent}*|\+|\-|\.\.\.
+Identifier=[^0-9\.\+\-\(#\\[0-9];]*{Initial}{Subsequent}*|\+|\-|\.\.\.
 
 Initial={Letter}|"!"|"$"|"%"|"&"|"*"|"/"|":"|"<"|">"|"?"|"~"|"_"|"^"|"="
 
@@ -25,11 +25,19 @@ Digit=[0-9]
 
 Empty=[]
 
+Datum={Boolean}|{Number}|{Character}|{String}|{Symbol}|{List}|{Vector}
+
+Symbol=\'{Identifier}
+
+Vector=\#\(
+
+List=\(
+
+Abbreviation=\'{Datum}|\`{Datum}|\,{Datum}|\,\@{Datum}
+
 Boolean=#t|f|T|F
 
-Numbers={Num2}|{Num8}|{Num10}|{Num16}
-
-Symbol='{Identifier}*
+Number={Num2}|{Num8}|{Num10}|{Num16}
 
 Character=#\\[^\r\n]|{Whitespace}|\n
 
@@ -151,32 +159,25 @@ Digit16={Digit}|[a-f]
   "#" {}
   "'" {}
 
-  {Initial} {}
+  {Datum} {
+    System.out.println("Comment \""+yytext()+"\" at line "+yyline+", column "+yycolumn );
+  }
 
-  {Subsequent} {}
+  {Comment} {
+      System.out.println("Comment \""+yytext()+"\" at line "+yyline+", column "+yycolumn );
+  }
 
-  {Numbers} {}
-
-  {Boolean} {}
-
-  {Symbol} {}
-
-  {Comment} {}
-
-  {Identifier} {}
+  {Identifier} {
+    System.out.println("Identifier \""+yytext()+"\" at line "+yyline+", column "+yycolumn );
+  }
 
   {Whitespace} {}
-
+    //Do nothing
   }
 
   "." {}
   "@" {}
   "," {}
-
-  {String} {}
-
-  {Character} {}
-
 
   [^] { throw new RuntimeException("Illegal character \""+yytext()+
                                                                   "\" at line "+yyline+", column "+yycolumn); }
