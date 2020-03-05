@@ -13,7 +13,9 @@ Whitespace={LineTerminator}|[\s\t\f]
 
 Comment=;.*(.*)?(.*)
 
-Identifier=[^0-9\.\+\-\(#\\[0-9];]*{Initial}{Subsequent}*|\+|\-|\.\.\.
+Keyword="let-syntax"|"letrec-syntax"|"quote"|"lambda"|"if"|"set!"|"and"|"begin"|"case"|"cond"|"delay"|"do"|"let"|"let*"|"letrec"|"quasiquote"|"null"|"define"|"display"
+
+Identifier={Initial}{Subsequent}*|\+|\-|\.\.\.
 
 Initial={Letter}|"!"|"$"|"%"|"&"|"*"|"/"|":"|"<"|">"|"?"|"~"|"_"|"^"|"="
 
@@ -23,23 +25,13 @@ Letter=[a-zA-z0]
 
 Digit=[0-9]
 
-Empty=[]
-
-Datum={Boolean}|{Number}|{Character}|{String}|{Symbol}|{List}|{Vector}
-
-Symbol=\'{Identifier}
-
-Vector=\#\(
-
-List=\(
-
-Abbreviation=\'{Datum}|\`{Datum}|\,{Datum}|\,\@{Datum}
+Empty=""
 
 Boolean=#t|f|T|F
 
 Number={Num2}|{Num8}|{Num10}|{Num16}
 
-Character=#\\[^\r\n]|{Whitespace}|\n
+Character=#\\[^\r\n]
 
 String=\"(([^\"]|\\\")*[^\\])?\"
 
@@ -132,52 +124,47 @@ Digit16={Digit}|[a-f]
 
 <YYINITIAL> {
 
-  "let-syntax" {}
-  "letrex-syntax" {}
-  "quote" {}
-  "lambda" {}
-  "if" {}
-  "set!" {}
-  "and" {}
-  "begin" {}
-  "case" {}
-  "cond" {}
-  "delay" {}
-  "do" {}
-  "let" {}
-  "let*" {}
-  "letrex" {}
-  "quasiquote" {}
+  {Number} {
+      System.out.println("NUMBER \""+yytext()+"\" at line "+yyline+", column "+yycolumn );
+  }
 
-  "null" {}
+{Keyword} {
+    System.out.println("KEYWORD \""+yytext()+"\" at line "+yyline+", column "+yycolumn );
+}
 
-  "(" {}
-  ")" {}
-  "[" {}
-  "]" {}
-  "`" {}
+  "(" {  System.out.println("LP \""+yytext()+"\" at line "+yyline+", column "+yycolumn );}
+  ")" {  System.out.println("RP \""+yytext()+"\" at line "+yyline+", column "+yycolumn );}
+  "[" {  System.out.println("LSB \""+yytext()+"\" at line "+yyline+", column "+yycolumn );}
+  "]" {  System.out.println("RSB \""+yytext()+"\" at line "+yyline+", column "+yycolumn );}
+  "`" {  System.out.println("DIACRITIC \""+yytext()+"\" at line "+yyline+", column "+yycolumn );}
   "#" {}
-  "'" {}
+  "'" {  System.out.println("SQ \""+yytext()+"\" at line "+yyline+", column "+yycolumn );}
 
-  {Datum} {
-    System.out.println("Comment \""+yytext()+"\" at line "+yyline+", column "+yycolumn );
-  }
+{Identifier} {
+  System.out.println("IDENTIFIER \""+yytext()+"\" at line "+yyline+", column "+yycolumn );
+}
 
-  {Comment} {
-      System.out.println("Comment \""+yytext()+"\" at line "+yyline+", column "+yycolumn );
-  }
+{Comment} {
+      System.out.println("COMMENT \""+yytext()+"\" at line "+yyline+", column "+yycolumn );
+}
 
-  {Identifier} {
-    System.out.println("Identifier \""+yytext()+"\" at line "+yyline+", column "+yycolumn );
-  }
-
-  {Whitespace} {}
+{Whitespace} {}
     //Do nothing
-  }
+}
+{Boolean} {
+    System.out.println("BOOL \""+yytext()+"\" at line "+yyline+", column "+yycolumn );
+}
 
-  "." {}
-  "@" {}
-  "," {}
+{String} {
+    System.out.println("STR \""+yytext()+"\" at line "+yyline+", column "+yycolumn );
+}
 
-  [^] { throw new RuntimeException("Illegal character \""+yytext()+
+{Character} {
+    System.out.println("CHAR \""+yytext()+"\" at line "+yyline+", column "+yycolumn );
+}
+\. {System.out.println("DOT \""+yytext()+"\" at line "+yyline+", column "+yycolumn); }
+"@" {  System.out.println("AT \""+yytext()+"\" at line "+yyline+", column "+yycolumn );}
+"," {  System.out.println("COMMA \""+yytext()+"\" at line "+yyline+", column "+yycolumn );}
+
+[^] { throw new RuntimeException("Illegal character \""+yytext()+
                                                                   "\" at line "+yyline+", column "+yycolumn); }

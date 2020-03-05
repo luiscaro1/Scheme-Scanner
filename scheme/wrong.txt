@@ -1,5 +1,5 @@
 
-;;adds a pair of brackets instead of parenthesis
+;;adds a pair of brackets instead of parenthesis to display error
 
 ;; Calculation of Hofstadter's male and female sequences as a list of pairs
 
